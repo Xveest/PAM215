@@ -9,6 +9,7 @@ import ActivityScreen from './ActivityScreen'
 import FlatScreen from './FlatScreen'
 import ModalScreen from './ModalScreen'
 import BottomScreen from './BottomScreen'
+import RepasoScreen from './RepasoScreen'
 
 export default function MenuScreen() {
     const [screen, setScreen] = useState('menu');
@@ -32,6 +33,8 @@ switch (screen) {
         return <ModalScreen  />;
     case 'bottom':  
         return <BottomScreen  />;
+    case 'repaso':
+        return <RepasoScreen  />;
     case 'menu':
         default:
             return (
@@ -46,6 +49,7 @@ switch (screen) {
                 <Button onPress={() => setScreen('flat') } title='Pract: FlatList'/>
                 <Button onPress={() => setScreen('modal') } title='Pract: Modal'/>
                 <Button onPress={() => setScreen('bottom') } title='Pract: Bottom'/>
+                <Button onPress={() => setScreen('repaso') } title='Pract: Repaso'/>
              </View>
   )
 }

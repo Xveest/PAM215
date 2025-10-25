@@ -18,7 +18,7 @@ export default function ImageScreen() {
 
     if(cargando){
       return(
-        <Animated.View style={[styles.splashcontainer, { opacity: desvanecido }]}>
+        <Animated.View style={[styles.splashcontainer, {opacity: desvanecido}]}>
           <ImageBackground 
           source={require('../assets/imagenpractica2.jpeg')} 
           resizeMode='contain'
