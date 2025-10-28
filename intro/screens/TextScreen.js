@@ -11,8 +11,8 @@ export default function TextInputAlertScreen() {
 
   const mostrarAlerta = () => {
      if(nombre.trim() === '' || password.trim() === '' || Telefono.trim() === '') {
-        Alert.alert("Error", "Por favor completa todos los campos (movile)");
-        alert("Error", "Por favor completa todos los campos (web)");
+        Alert.alert("Error , Por favor completa todos los campos (movil)");
+        alert("Error,Por favor completa todos los campos (web)");
         return;
      } else {
         
@@ -24,15 +24,9 @@ export default function TextInputAlertScreen() {
         `Nombre: ${nombre}\nPassword: ${password}
          \nTelefono: ${Telefono}`
         );
-        
 
-
-
-
-
-
-     }
-  }
+    }
+   }
 
     return (
       <View style={styles.container}>
@@ -41,11 +35,9 @@ export default function TextInputAlertScreen() {
         <TextInput style={styles.input}
            placeholder='Escribe tu nombre aquí'
            value={nombre}
-           onChangeText={setNombre}
-        
+           onChangeText={setNombre}      
         />
-
-         <Text style={styles.etiquetas}>Password:</Text>
+       <Text style={styles.etiquetas}>Password:</Text>
         <TextInput style={styles.input}
            placeholder='Escribe tu password aquí'
             secureTextEntry={true}
@@ -53,9 +45,7 @@ export default function TextInputAlertScreen() {
            onChangeText={setPassword}
 
         />    
-        
-
-         <Text style={styles.etiquetas}>Telefono:</Text>
+       <Text style={styles.etiquetas}>Telefono:</Text>
         <TextInput style={styles.input}
            placeholder='Escribe tu telefono aquí'
            keyboardType='phone-pad'
@@ -66,14 +56,7 @@ export default function TextInputAlertScreen() {
           title='Mostrar Alerta'
            onPress={mostrarAlerta}
         
-        />
-
-        
-        
-
-
-
-        
+        />     
       </View>
     )
   
