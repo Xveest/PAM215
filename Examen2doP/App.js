@@ -1,6 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ImageBackground, Button, Animated, Easing, } from 'react-native';
-import { ScrollView, Switch } from 'react-native-web';
+import { StyleSheet, Text, View, ImageBackground, Button, Animated, Easing, ScrollView, Switch } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 
@@ -11,8 +10,17 @@ export default function App() {
   const[esCompletadoSegundoEstudio, setEsCompletadoSegundoEstudio]= useState(false);
   const[esCompletadoHogar, setEsCompletadoHogar]= useState(false);
   const[esCompletadoSegundoHogar, setEsCompletadoSegundoHogar]= useState(false);
-    const [cargando, setCargando] = useState(true);
-    const desvanecido= new Animated.Value(1);
+  const [cargando, setCargando] = useState(true);
+  const desvanecido= new Animated.Value(1);
+
+  const reiniciarTodos = () => {
+    setEsCompletadoTrabajo(false);
+    setEsCompletadoSegundoTrabajo(false);
+    setEsCompletadoEstudio(false);
+    setEsCompletadoSegundoEstudio(false);
+    setEsCompletadoHogar(false);
+    setEsCompletadoSegundoHogar(false);
+  };
 
     useEffect(() => {
       Animated.timing(desvanecido, {
@@ -39,31 +47,99 @@ export default function App() {
    
        <Text style={styles.texto}>Mis deseos </Text>
        <Text style={styles.texto}>7/11/2025</Text>
-       <ScrollView> 
-        <Text style={styles.contenedorcat1}> 1.Trabajo {"\n"}
-           <Text > {esCompletadoTrabajo ? " termine el trabajo" : "tengo que terminar el trabajo( prioridad media)" }</Text>
-           <Switch
-            value={esCompletadoTrabajo}
-            onValueChange={() => setEsCompletadoTrabajo(!esCompletadoTrabajo)}
-            > </Switch>
-           <Text > {esCompletadoSegundoTrabajo ? " termine el segundo trabajo" : "tengo que terminar el segundo trabajo(prioridad alta)" }</Text>
-          <Switch
-            value={esCompletadoSegundoTrabajo}
-            onValueChange={() => setEsCompletadoSegundoTrabajo(!esCompletadoSegundoTrabajo)}
-            > </Switch>
-        </Text>
-        <Text style={styles.contenedorcat2}> 2. Estudios {"\n"}
-          <Switch
-            value={esCompletadoEstudio}
-            onValueChange={() => setEsCompletadoEstudio(!esCompletadoEstudio)}
-            > </Switch>
-        </Text>
-          <Text style={styles.contenedorcat3}> 3. Hogar {"\n"}
-          <Switch
-            value={esCompletadoHogar}
-            onValueChange={() => setEsCompletadoHogar(!esCompletadoHogar)}
-            > </Switch>
-        </Text>
+       
+       <View style={styles.botonReinicio}>
+         <Button 
+           title="Reiniciar Todos" 
+           onPress={reiniciarTodos}
+           color="#ff6b6b"
+         />
+       </View>
+
+       <ScrollView style={styles.scrollContainer}> 
+        <View style={styles.contenedorcat1}>
+          <Text style={styles.tituloCategoria}>1. Trabajo</Text>
+          
+          <View style={styles.tareaContainer}>
+            <Text style={styles.tareaTexto}>
+              {esCompletadoTrabajo ? "✓ Terminé el trabajo" : "Tengo que terminar el trabajo (prioridad media)"}
+            </Text>
+            <Switch
+              value={esCompletadoTrabajo}
+              onValueChange={() => setEsCompletadoTrabajo(!esCompletadoTrabajo)}
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={esCompletadoTrabajo ? "#2196F3" : "#f4f3f4"}
+            />
+          </View>
+
+          <View style={styles.tareaContainer}>
+            <Text style={styles.tareaTexto}>
+              {esCompletadoSegundoTrabajo ? "✓ Terminé el segundo trabajo" : "Tengo que terminar el segundo trabajo (prioridad alta)"}
+            </Text>
+            <Switch
+              value={esCompletadoSegundoTrabajo}
+              onValueChange={() => setEsCompletadoSegundoTrabajo(!esCompletadoSegundoTrabajo)}
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={esCompletadoSegundoTrabajo ? "#2196F3" : "#f4f3f4"}
+            />
+          </View>
+        </View>
+
+        <View style={styles.contenedorcat2}>
+          <Text style={styles.tituloCategoria}>2. Estudios</Text>
+          
+          <View style={styles.tareaContainer}>
+            <Text style={styles.tareaTexto}>
+              {esCompletadoEstudio ? "✓ Completé el estudio" : "Tengo que completar el estudio"}
+            </Text>
+            <Switch
+              value={esCompletadoEstudio}
+              onValueChange={() => setEsCompletadoEstudio(!esCompletadoEstudio)}
+              trackColor={{ false: "#767577", true: "#e91eff" }}
+              thumbColor={esCompletadoEstudio ? "#d500f9" : "#f4f3f4"}
+            />
+          </View>
+
+          <View style={styles.tareaContainer}>
+            <Text style={styles.tareaTexto}>
+              {esCompletadoSegundoEstudio ? "✓ Completé el segundo estudio" : "Tengo que completar el segundo estudio"}
+            </Text>
+            <Switch
+              value={esCompletadoSegundoEstudio}
+              onValueChange={() => setEsCompletadoSegundoEstudio(!esCompletadoSegundoEstudio)}
+              trackColor={{ false: "#767577", true: "#e91eff" }}
+              thumbColor={esCompletadoSegundoEstudio ? "#d500f9" : "#f4f3f4"}
+            />
+          </View>
+        </View>
+
+        <View style={styles.contenedorcat3}>
+          <Text style={styles.tituloCategoria}>3. Hogar</Text>
+          
+          <View style={styles.tareaContainer}>
+            <Text style={styles.tareaTexto}>
+              {esCompletadoHogar ? "✓ Completé tarea del hogar" : "Tengo que completar tarea del hogar"}
+            </Text>
+            <Switch
+              value={esCompletadoHogar}
+              onValueChange={() => setEsCompletadoHogar(!esCompletadoHogar)}
+              trackColor={{ false: "#767577", true: "#90EE90" }}
+              thumbColor={esCompletadoHogar ? "#00ff00" : "#f4f3f4"}
+            />
+          </View>
+
+          <View style={styles.tareaContainer}>
+            <Text style={styles.tareaTexto}>
+              {esCompletadoSegundoHogar ? "✓ Completé segunda tarea del hogar" : "Tengo que completar segunda tarea del hogar"}
+            </Text>
+            <Switch
+              value={esCompletadoSegundoHogar}
+              onValueChange={() => setEsCompletadoSegundoHogar(!esCompletadoSegundoHogar)}
+              trackColor={{ false: "#767577", true: "#90EE90" }}
+              thumbColor={esCompletadoSegundoHogar ? "#00ff00" : "#f4f3f4"}
+            />
+          </View>
+        </View>
        </ScrollView>
 
     
@@ -74,44 +150,55 @@ export default function App() {
 
 const styles = StyleSheet.create({
   contenedorcat1:{
-    color: 'white',
-    fontSize: 25,
-    fontWeight: 'bold',
-    backgroundColor: 'rgba(3, 19, 247, 0.5)',
-    padding: 100,
-    borderRadius: 10,
-    justifyContent: 'center',
+    backgroundColor: 'rgba(3, 19, 247, 0.7)',
+    padding: 20,
+    borderRadius: 15,
     marginTop: 20,
     marginBottom: 20,
+    marginHorizontal: 10,
   },
-contenedorcat2:{
-    color: 'white',
-    fontSize: 25,
-    fontWeight: 'bold',
-    backgroundColor: 'rgba(247, 3, 231, 0.5)',
-    padding: 100,
-    borderRadius: 10,
-    justifyContent: 'center',
+  contenedorcat2:{
+    backgroundColor: 'rgba(247, 3, 231, 0.7)',
+    padding: 20,
+    borderRadius: 15,
     marginBottom: 20,
+    marginHorizontal: 10,
   },
   contenedorcat3:{
-    color: 'white',
-    fontSize: 25,
-    fontWeight: 'bold',
-    backgroundColor: 'rgba(0, 255, 0, 0.5)',
-    padding: 100,
-    borderRadius: 10,
-    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 255, 0, 0.7)',
+    padding: 20,
+    borderRadius: 15,
     marginBottom: 20,
+    marginHorizontal: 10,
   },  
+  tituloCategoria: {
+    color: 'white',
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  tareaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  tareaTexto: {
+    color: 'white',
+    fontSize: 16,
+    flex: 1,
+    marginRight: 10,
+  },
   background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-
     width: '100%',
     height: '100%',
-
+  },
+  scrollContainer: {
+    width: '100%',
   },
   texto: {
     color: 'white',
@@ -120,27 +207,35 @@ contenedorcat2:{
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 10,
     borderRadius: 10,
-    justifyContent: 'center',
-
+    textAlign: 'center',
+    marginTop: 40,
+  },
+  botonReinicio: {
+    marginVertical: 15,
+    marginHorizontal: 50,
+    borderRadius: 10,
+    overflow: 'hidden',
   },
   splashcontainer:{
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 50,
+    backgroundColor: '#1a1a2e',
   },
   splashimage:{
     flex: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    
   },
   splashtext:{
-   position: 'absolute',
-   marginBottom: 60,
-    fontSize: 20,
-    color: 'red',
-
+    position: 'absolute',
+    marginBottom: 60,
+    fontSize: 24,
+    color: '#ff6b6b',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    paddingHorizontal: 20,
   },
 })
