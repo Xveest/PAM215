@@ -1,19 +1,19 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Profile({ navigation }) {
+export default function Detail({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.iconRow}>
-        <Ionicons name="person-outline" size={28} color="green" />
-        <Text style={styles.title}>Perfil de usuario</Text>
+        <Ionicons name="information-circle-outline" size={28} color="purple" />
+        <Text style={styles.title}>Detalles de usuario</Text>
       </View>
 
       <Pressable
         style={styles.button}
-        onPress={() => navigation.navigate('Detail')}
+        onPress={() => navigation.goBack()}
       >
-        <Text style={styles.buttonText}>Detalles de usuario</Text>
+        <Text style={styles.buttonText}>Volver a Perfil</Text>
       </Pressable>
     </View>
   );
@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 10,
-    color: 'green',
+    color: 'purple',
   },
   button: {
-    backgroundColor: '#28A745',
+    backgroundColor: '#6c757d',
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
