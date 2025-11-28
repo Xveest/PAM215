@@ -11,8 +11,8 @@ export default function UsuarioView() {
   const [nombre, setNombre] = useState('');
   const [loading, setLoading] = useState(true);
   const [guardando, setGuardando] = useState(false);
+  const [editando, setEditando] = useState(null);
 
-  // SELECT - Cargar usuarios desde la BD
   const cargarUsuarios = useCallback(async () => {
     try {
       setLoading(true);
@@ -26,7 +26,6 @@ export default function UsuarioView() {
     }
   }, []);
 
-  // Inicializar y cargar datos
   useEffect(() => {
     const init = async () => {
       await controller.initialize();
@@ -34,7 +33,6 @@ export default function UsuarioView() {
     };
 
     init();
-    // avisar los cambios automáticos
     controller.addListener(cargarUsuarios);
 
     return () => {
@@ -42,14 +40,18 @@ export default function UsuarioView() {
     };
   }, [cargarUsuarios]);
 
-  // INSERT - Agregar nuevo usuario
   const handleAgregar = async () => {
-
     if (guardando) return;
     try {
       setGuardando(true);
-      const usuarioCreado = await controller.crearUsuario(nombre);
-      Alert.alert('Usuario Creado', `"${usuarioCreado.nombre}" guardado con ID: ${usuarioCreado.id}`);
+      if (editando) {
+        await controller.actualizarUsuario(editando.id, nombre);
+        Alert.alert('Éxito', 'Usuario actualizado correctamente');
+        setEditando(null);
+      } else {
+        const usuarioCreado = await controller.crearUsuario(nombre);
+        Alert.alert('Usuario Creado', `"${usuarioCreado.nombre}" guardado con ID: ${usuarioCreado.id}`);
+      }
       setNombre('');
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -58,7 +60,38 @@ export default function UsuarioView() {
     }
   };
 
-  // Renderizar cada usuario
+  const handleEditar = (usuario) => {
+    setEditando(usuario);
+    setNombre(usuario.nombre);
+  };
+
+  const handleCancelar = () => {
+    setEditando(null);
+    setNombre('');
+  };
+
+  const handleEliminar = (usuario) => {
+    Alert.alert(
+      'Confirmar eliminación',
+      `¿Estás seguro de eliminar a "${usuario.nombre}"?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await controller.eliminarUsuario(usuario.id);
+              Alert.alert('Éxito', 'Usuario eliminado correctamente');
+            } catch (error) {
+              Alert.alert('Error', error.message);
+            }
+          }
+        }
+      ]
+    );
+  };
+
   const renderUsuario = ({ item, index }) => (
     <View style={styles.userItem}>
       <View style={styles.userNumber}>
@@ -75,14 +108,28 @@ export default function UsuarioView() {
           })}
         </Text>
       </View>
+      <View style={styles.userActions}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => handleEditar(item)}
+        >
+          <Text style={styles.editButtonText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleEliminar(item)}
+        >
+          <Text style={styles.deleteButtonText}>Eliminar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Gestión de Usuarios</Text>
+      <Text style={styles.title}>CRUD USUARIOS</Text>
+        <Text style={styles.subtitle}>Gestión de Usuarios con React Native</Text>
 
-      {/* Input y botón */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -99,12 +146,26 @@ export default function UsuarioView() {
           {guardando ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Agregar</Text>
+            <Text style={styles.buttonText}>{editando ? 'Actualizar' : 'Agregar'}</Text>
           )}
+        </TouchableOpacity>
+        {editando && (
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handleCancelar}
+          >
+            <Text style={styles.cancelButtonText}>Cancelar</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <View style={styles.listHeader}>
+        <Text style={styles.listTitle}>Lista de Usuarios</Text>
+        <TouchableOpacity onPress={cargarUsuarios} style={styles.reloadButton}>
+          <Text style={styles.reloadText}>Recargar</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Lista de usuarios */}
       {loading ? (
         <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />
       ) : (
@@ -130,15 +191,42 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 5,
     textAlign: 'center',
     color: '#333',
+    letterSpacing: 2,
+  },
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#999',
   },
   inputContainer: {
     flexDirection: 'row',
     marginBottom: 20,
+  },
+  listHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  listTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  reloadButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  reloadText: {
+    color: '#007BFF',
+    fontSize: 16,
+    fontWeight: '500',
   },
   input: {
     flex: 1,
@@ -200,6 +288,47 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
+  },
+  userActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  editButton: {
+    backgroundColor: '#FFC107',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  deleteButton: {
+    backgroundColor: '#DC3545',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  cancelButton: {
+    backgroundColor: '#6c757d',
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 100,
+  },
+  cancelButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
   userName: {
     fontSize: 18,

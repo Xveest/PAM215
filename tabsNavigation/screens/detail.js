@@ -5,16 +5,11 @@ export default function Detail({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.iconRow}>
-        <Ionicons name="information-circle-outline" size={28} color="purple" />
-        <Text style={styles.title}>Detalles de usuario</Text>
+        <Text style={styles.title}>Detalles Usuario</Text>
+        <Text style={styles.subtitle}>Usando Navegacion Stack</Text>
       </View>
 
-      <Pressable
-        style={styles.button}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.buttonText}>Volver a Perfil</Text>
-      </Pressable>
+
     </View>
   );
 }
@@ -35,8 +30,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 10,
-    color: 'purple',
+    color: '#000',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#4A90E2',
+    marginTop: 5,
   },
   button: {
     backgroundColor: '#6c757d',

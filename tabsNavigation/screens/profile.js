@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 10,
-    color: 'green',
+    color: '#28A745',
   },
   button: {
-    backgroundColor: '#28A745',
+    backgroundColor: '#4A90E2',
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,

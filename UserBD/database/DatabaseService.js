@@ -57,6 +57,54 @@ class DatabaseService {
       };
     }
   }
+
+  async update(id, nombre) {
+    if (Platform.OS === 'web') {
+      const usuarios = await this.getAll();
+      const index = usuarios.findIndex(u => u.id === id);
+      
+      if (index === -1) {
+        throw new Error('Usuario no encontrado');
+      }
+
+      usuarios[index].nombre = nombre;
+      localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
+      return usuarios[index];
+    } else {
+      await this.db.runAsync(
+        'UPDATE usuarios SET nombre = ? WHERE id = ?',
+        nombre, id
+      );
+      return {
+        id,
+        nombre,
+        fecha_creacion: new Date().toISOString()
+      };
+    }
+  }
+
+  async delete(id) {
+    const numericId = typeof id === 'string' ? parseInt(id) : id;
+    console.log('Eliminando usuario ID:', numericId);
+    
+    if (Platform.OS === 'web') {
+      const usuarios = await this.getAll();
+      const nuevosUsuarios = usuarios.filter(u => {
+        const usuarioId = typeof u.id === 'string' ? parseInt(u.id) : u.id;
+        return usuarioId !== numericId;
+      });
+      
+      if (usuarios.length === nuevosUsuarios.length) {
+        throw new Error('Usuario no encontrado');
+      }
+
+      localStorage.setItem(this.storageKey, JSON.stringify(nuevosUsuarios));
+      return true;
+    } else {
+      await this.db.runAsync('DELETE FROM usuarios WHERE id = ?', numericId);
+      return true;
+    }
+  }
 }
 
 // Exportar instancia de la clase
